@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://agentrouter.org",
+    "ANTHROPIC_AUTH_TOKEN": "sk-1QgQnrJX27CHTHYn6WlnVpT3PVrxy5UFK6R0xvQgbztTc7Dq",
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_MODEL": "deepseek-v4-flash",
+    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"
+  },
+  "disabledMcpjsonServers": [
+    "laravel-boost"
+  ]
+}
