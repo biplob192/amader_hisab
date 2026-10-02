@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/categories', [ExpenseCategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [ExpenseCategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [ExpenseCategoryController::class, 'store'])->name('categories.store');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
