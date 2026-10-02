@@ -21,6 +21,7 @@ class ExpenseCategoryController extends Controller
             ->get();
 
         $rows = $categories->map(fn (ExpenseCategory $category): array => [
+            'id' => $category->id,
             'name' => $category->name,
             'color' => $category->color,
             'count' => (int) $category->expense_count,
@@ -48,6 +49,11 @@ class ExpenseCategoryController extends Controller
         return view('categories.create');
     }
 
+    public function edit(ExpenseCategory $category): View
+    {
+        return view('categories.edit', ['category' => $category]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         ExpenseCategory::create($this->validatedCategory($request));
@@ -55,10 +61,17 @@ class ExpenseCategoryController extends Controller
         return to_route('categories.index')->with('status', 'Category added.');
     }
 
-    private function validatedCategory(Request $request): array
+    public function update(Request $request, ExpenseCategory $category): RedirectResponse
+    {
+        $category->update($this->validatedCategory($request, $category));
+
+        return to_route('categories.index')->with('status', 'Category updated.');
+    }
+
+    private function validatedCategory(Request $request, ?ExpenseCategory $category = null): array
     {
         return $request->validate([
-            'name' => ['required', 'string', 'max:80', Rule::unique('expense_categories', 'name')],
+            'name' => ['required', 'string', 'max:80', Rule::unique('expense_categories', 'name')->ignore($category)],
             'color' => ['required', 'string', 'regex:/^#[0-9a-f]{6}$/i'],
         ]);
     }

@@ -26,5 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories', [ExpenseCategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [ExpenseCategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [ExpenseCategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}/edit', [ExpenseCategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [ExpenseCategoryController::class, 'update'])->name('categories.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
