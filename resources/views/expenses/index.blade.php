@@ -16,7 +16,7 @@
             </form>
         </section>
         <section class="activity-card expense-table-card">
-            <div class="activity-heading"><div><h2>All expenses</h2><p>{{ $expenses->total() }} {{ \Illuminate\Support\Str::plural('result', $expenses->total()) }}</p></div><span class="activity-count">{{ $expenses->total() }} records</span></div>
+            <div class="activity-heading"><div><h2>All expenses</h2><p>{{ $expenses->total() }} {{ \Illuminate\Support\Str::plural('result', $expenses->total()) }}</p></div><span class="activity-count">{{ $expenses->total() }} records · ৳ {{ number_format($totalNet, 2) }} total</span></div>
             @if($expenses->isEmpty())
                 <div class="empty-state"><div class="empty-icon">৳</div><strong>{{ $hasFilters ? 'No matching expenses' : 'No expenses yet' }}</strong><p>{{ $hasFilters ? 'Try changing or clearing your filters.' : 'Add your first family expense to get started.' }}</p>@if($hasFilters)<a class="add-transaction" href="{{ route('expenses.index') }}">Clear filters</a>@else<a class="add-transaction" href="{{ route('expenses.create') }}">＋ Add expense</a>@endif</div>
             @else

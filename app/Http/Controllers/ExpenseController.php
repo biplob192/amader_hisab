@@ -6,6 +6,7 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -44,8 +45,11 @@ class ExpenseController extends Controller
             ->when($filters['date_from'] ?? null, fn ($query, $date) => $query->whereDate('spent_on', '>=', $date))
             ->when($filters['date_to'] ?? null, fn ($query, $date) => $query->whereDate('spent_on', '<=', $date));
 
+        $totalNet = (float) (clone $query)->sum(DB::raw('amount - returned_amount'));
+
         return view('expenses.index', [
             'expenses' => $query->latest('spent_on')->latest('id')->paginate($perPage)->withQueryString(),
+            'totalNet' => $totalNet,
             'categories' => ExpenseCategory::query()->orderBy('name')->get(),
             'payers' => self::PAYERS,
             'filters' => $filters,
