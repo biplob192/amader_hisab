@@ -40,12 +40,15 @@ class ReportController extends Controller
         $daily = Expense::where('user_id', $userId)->whereBetween('spent_on', [$start, $end])
             ->selectRaw('DATE(spent_on) as day, SUM(amount - returned_amount) as total')->groupBy('day')->orderBy('day')->get();
 
+        $dailyExpenses = Expense::query()->with('category')->where('user_id', $userId)->whereBetween('spent_on', [$start, $end])->orderBy('spent_on')->orderBy('id')->get()->groupBy(fn (Expense $expense) => $expense->spent_on->toDateString());
+
         return view('reports.index', [
             'month' => $month,
             'categories' => $categories,
             'total' => $categories->sum('amount'),
             'previousTotal' => $categories->sum('previous'),
             'daily' => $daily,
+            'dailyExpenses' => $dailyExpenses,
             'highest' => $categories->first(),
         ]);
     }
