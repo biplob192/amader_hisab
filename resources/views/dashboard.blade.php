@@ -29,5 +29,17 @@
         <section class="activity-card dashboard-recent"><div class="activity-heading"><div><h2>Recent expenses</h2><p>Latest household transactions</p></div><a class="text-link" href="{{ route('expenses.index') }}">All expenses <span aria-hidden="true">→</span></a></div>
             @if($recentExpenses->isEmpty())<div class="empty-state"><div class="empty-icon">৳</div><strong>No expenses recorded yet</strong><p>Start tracking your household spending.</p><a class="add-transaction" href="{{ route('expenses.create') }}">＋ Add first expense</a></div>@else<div class="expense-list">@foreach($recentExpenses as $expense)<div class="expense-row"><span class="category-dot" style="--category-color:{{ $expense->category->color }}"></span><div class="expense-description"><strong>{{ $expense->notes ?: $expense->category->name }}</strong><small>{{ $expense->category->name }} · {{ $expense->spent_on->format('M j') }} · {{ $expense->paid_by }}</small></div><strong class="expense-amount">৳ {{ number_format($expense->net_amount, 2) }}</strong></div>@endforeach</div>@endif
         </section>
+
+        <section class="dashboard-charts" aria-label="Expense charts">
+            <article class="info-card dashboard-chart-card"><div class="info-card-heading"><div><h3>Daily expense</h3><p>Net spending each day in {{ $month->format('F Y') }}</p></div><span class="info-period">{{ $month->format('M Y') }}</span></div>{!! $dailyExpenseChart->renderHtml() !!}</article>
+            <article class="info-card dashboard-chart-card"><div class="info-card-heading"><div><h3>Monthly expense</h3><p>Net spending by month in {{ $month->format('Y') }}</p></div><span class="info-period">{{ $month->format('Y') }}</span></div>{!! $monthlyExpenseChart->renderHtml() !!}</article>
+        </section>
+
         <footer class="dashboard-footer"><span>Family finances, a little clearer.</span><span>AMADER HISAB · HOUSEHOLD</span></footer>
     @endsection
+
+@section('javascript')
+    {!! $dailyExpenseChart->renderChartJsLibrary() !!}
+    {!! $dailyExpenseChart->renderJs() !!}
+    {!! $monthlyExpenseChart->renderJs() !!}
+@endsection

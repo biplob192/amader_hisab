@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class DashboardController extends Controller
 {
@@ -16,6 +17,9 @@ class DashboardController extends Controller
         $month = $requestedMonth ? Carbon::createFromFormat('Y-m', $requestedMonth)->startOfMonth() : now()->startOfMonth();
         $start = $month->copy()->startOfMonth()->toDateString();
         $end = $month->copy()->endOfMonth()->toDateString();
+        $yearStart = $month->copy()->startOfYear()->toDateString();
+        $yearEnd = $month->copy()->endOfYear()->toDateString();
+        $userId = (int) $request->user()->id;
         $expenses = Expense::query()->where('user_id', $request->user()->id)->whereBetween('spent_on', [$start, $end]);
         $householdExpenses = Expense::query()->where('user_id', $request->user()->id);
         $today = now()->toDateString();
@@ -25,9 +29,25 @@ class DashboardController extends Controller
         $daysInSelectedMonth = $month->format('Y-m') === now()->format('Y-m')
             ? (int) now()->format('j')
             : (int) $month->copy()->endOfMonth()->format('j');
+        $dailyExpenseChart = new LaravelChart([
+            'chart_title' => 'Daily expense', 'chart_type' => 'line', 'report_type' => 'group_by_date',
+            'model' => Expense::class, 'group_by_field' => 'spent_on', 'group_by_period' => 'day',
+            'date_format' => 'M j', 'aggregate_function' => 'sum', 'aggregate_field' => 'net_amount',
+            'filter_field' => 'spent_on', 'range_date_start' => $start, 'range_date_end' => $end,
+            'where_raw' => 'user_id = '.$userId, 'chart_color' => '43, 107, 76, 1', 'chart_height' => '280px',
+        ]);
+        $monthlyExpenseChart = new LaravelChart([
+            'chart_title' => 'Monthly expense', 'chart_type' => 'bar', 'report_type' => 'group_by_date',
+            'model' => Expense::class, 'group_by_field' => 'spent_on', 'group_by_period' => 'month',
+            'date_format' => 'M Y', 'aggregate_function' => 'sum', 'aggregate_field' => 'net_amount',
+            'filter_field' => 'spent_on', 'range_date_start' => $yearStart, 'range_date_end' => $yearEnd,
+            'where_raw' => 'user_id = '.$userId, 'chart_color' => '43, 107, 76, 1', 'chart_height' => '280px',
+        ]);
 
         return view('dashboard', [
             'month' => $month,
+            'dailyExpenseChart' => $dailyExpenseChart,
+            'monthlyExpenseChart' => $monthlyExpenseChart,
             'total' => (clone $expenses)->sum(DB::raw('amount - returned_amount')),
             'totalExpense' => (clone $householdExpenses)->sum(DB::raw('amount - returned_amount')),
             'todayTotal' => (clone $householdExpenses)->whereDate('spent_on', $today)->sum(DB::raw('amount - returned_amount')),

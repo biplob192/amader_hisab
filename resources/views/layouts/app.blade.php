@@ -13,5 +13,6 @@
 </head>
 <body class="min-h-screen antialiased">
     @yield('content')
+    @yield('javascript')
 </body>
 </html>
