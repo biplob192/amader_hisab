@@ -35,7 +35,7 @@ class ReportController extends Controller
                 'previous' => $priorAmount,
                 'change' => $priorAmount > 0 ? (($amount - $priorAmount) / $priorAmount) * 100 : null,
             ];
-        })->sortByDesc('amount')->values();
+        })->filter(fn (object $row): bool => $row->amount > 0 || $row->previous > 0)->sortByDesc('amount')->values();
 
         $daily = Expense::where('user_id', $userId)->whereBetween('spent_on', [$start, $end])
             ->selectRaw('DATE(spent_on) as day, SUM(amount - returned_amount) as total')->groupBy('day')->orderBy('day')->get();
