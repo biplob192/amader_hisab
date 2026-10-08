@@ -1,4 +1,4 @@
-﻿<aside class="sidebar">
+<aside class="sidebar">
     <a class="brand" href="{{ route('dashboard') }}"><span class="brand-mark">a.</span><span>amader<span class="brand-weight">hisab</span></span></a>
     <button class="sidebar-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" aria-label="Open navigation menu">
         <span></span>
