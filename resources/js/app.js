@@ -46,3 +46,22 @@ document.querySelectorAll('form[data-swal-confirm]').forEach((form) => {
         }
     });
 });
+
+const sidebar = document.querySelector('.sidebar');
+const sidebarToggle = sidebar?.querySelector('.sidebar-toggle');
+
+sidebarToggle?.addEventListener('click', () => {
+    const isExpanded = sidebarToggle.getAttribute('aria-expanded') === 'true';
+
+    sidebarToggle.setAttribute('aria-expanded', String(!isExpanded));
+    sidebarToggle.setAttribute('aria-label', isExpanded ? 'Open navigation menu' : 'Close navigation menu');
+    sidebar?.classList.toggle('is-expanded', !isExpanded);
+});
+
+sidebar?.querySelectorAll('.side-nav a').forEach((link) => {
+    link.addEventListener('click', () => {
+        sidebarToggle?.setAttribute('aria-expanded', 'false');
+        sidebarToggle?.setAttribute('aria-label', 'Open navigation menu');
+        sidebar?.classList.remove('is-expanded');
+    });
+});
