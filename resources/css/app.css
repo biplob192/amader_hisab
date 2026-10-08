@@ -75,3 +75,14 @@
     .sidebar .logout-button{display:flex;width:auto;min-width:36px;gap:6px;padding:0 9px;color:#647169;font-size:12px;font-weight:600}
     .logout-label{display:inline}
 }
+.logout-label{display:none}
+@media(max-width:680px){
+    .sidebar .logout-label{display:inline}
+}
+@media(max-width:680px){
+    .sidebar .sidebar-bottom{display:none}
+    .sidebar.is-expanded .sidebar-bottom{display:block;flex:0 0 100%;margin:0;padding-top:8px;border-top:1px solid #eef0ed}
+    .sidebar.is-expanded .profile-row{justify-content:flex-end;gap:9px}
+    .sidebar.is-expanded .avatar{display:grid}
+    .sidebar.is-expanded .logout-label{display:inline}
+}
