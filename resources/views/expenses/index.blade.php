@@ -77,7 +77,7 @@
                                 <td>{{ $expense->spent_on->format('M j, Y') }}</td>
                                 <td class="align-right"><strong>৳ {{ number_format($expense->net_amount, 2) }}</strong><small>Given {{ number_format($expense->amount, 2) }} · Returned {{ number_format($expense->returned_amount, 2) }}</small></td>
                                 <td class="expense-actions"><a class="edit-expense-link" href="{{ route('expenses.edit', $expense) }}" aria-label="Edit expense">Edit</a>
-                                    <form method="POST" action="{{ route('expenses.destroy', $expense) }}" data-swal-confirm="Delete expense" data-swal-title="Delete this expense?" data-swal-text="This expense will be permanently removed." data-swal-icon="warning">@csrf @method('DELETE')<button class="delete-button" type="submit" aria-label="Delete this expense">×</button></form>
+                                    <form method="POST" action="{{ route('expenses.destroy', $expense) }}" data-swal-confirm="Delete expense" data-swal-title="Delete this expense?" data-swal-text="This expense will be moved out of your expense list." data-swal-icon="warning">@csrf @method('DELETE')<button class="delete-button" type="submit" aria-label="Delete this expense">×</button></form>
                                 </td>
                             </tr>
                         @endforeach
