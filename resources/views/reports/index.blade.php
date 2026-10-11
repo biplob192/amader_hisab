@@ -6,7 +6,10 @@
             <h1>Spending reports</h1>
             <p>Compare categories and spot changes over time.</p>
         </div>
-        <form method="GET" action="{{ route('reports.index') }}" class="month-form"><label for="month">Report month</label><input id="month" type="month" name="month" value="{{ $month->format('Y-m') }}" onchange="this.form.submit()"></form>
+        <div class="header-actions">
+            <form method="GET" action="{{ route('reports.index') }}" class="month-form"><label for="month">Report month</label><input id="month" type="month" name="month" value="{{ $month->format('Y-m') }}" onchange="this.form.submit()"></form>
+            <a class="primary-action" href="{{ route('reports.expenses-pdf', ['month' => $month->format('Y-m')]) }}" target="_blank" rel="noopener">Print preview</a>
+        </div>
     </header>
     <section class="report-summary">
         <div><span class="banner-eyebrow">TOTAL SPENDING · {{ strtoupper($month->format('F Y')) }}</span><strong>৳ {{ number_format($total, 2) }}</strong><small>Previous month: ৳ {{ number_format($previousTotal, 2) }}</small></div>

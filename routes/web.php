@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/expenses.pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses-pdf');
     Route::get('/categories', [ExpenseCategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [ExpenseCategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [ExpenseCategoryController::class, 'store'])->name('categories.store');

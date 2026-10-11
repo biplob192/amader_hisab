@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
     public function index(Request $request): View
     {
-        $requestedMonth = $request->validate(['month' => ['nullable', 'date_format:Y-m']])['month'] ?? null;
-        $month = $requestedMonth ? Carbon::createFromFormat('Y-m', $requestedMonth)->startOfMonth() : now()->startOfMonth();
+        $month = $this->selectedMonth($request);
+
         $start = $month->copy()->startOfMonth()->toDateString();
         $end = $month->copy()->endOfMonth()->toDateString();
         $previousStart = $month->copy()->subMonth()->startOfMonth()->toDateString();
@@ -51,5 +53,32 @@ class ReportController extends Controller
             'dailyExpenses' => $dailyExpenses,
             'highest' => $categories->first(),
         ]);
+    }
+
+    public function expensesPdf(Request $request): Response
+    {
+        $month = $this->selectedMonth($request);
+        $start = $month->copy()->startOfMonth()->toDateString();
+        $end = $month->copy()->endOfMonth()->toDateString();
+        $expenses = Expense::query()
+            ->with('category')
+            ->where('user_id', $request->user()->id)
+            ->whereBetween('spent_on', [$start, $end])
+            ->orderBy('spent_on')
+            ->orderBy('id')
+            ->get();
+
+        return Pdf::loadView('reports.expenses-pdf', [
+            'month' => $month,
+            'expenses' => $expenses,
+            'total' => $expenses->sum('net_amount'),
+        ])->stream('Expenses-'.$month->format('F-Y').'.pdf');
+    }
+
+    private function selectedMonth(Request $request): Carbon
+    {
+        $requestedMonth = $request->validate(['month' => ['nullable', 'date_format:Y-m']])['month'] ?? null;
+
+        return $requestedMonth ? Carbon::createFromFormat('Y-m', $requestedMonth)->startOfMonth() : now()->startOfMonth();
     }
 }
