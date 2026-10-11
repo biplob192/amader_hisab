@@ -6,7 +6,7 @@
         <div><span class="eyebrow login-eyebrow">FAMILY FINANCES</span>
             <h1>Expenses</h1>
             <p>Search and review household expenses.</p>
-        </div><a class="primary-action" href="{{ route('expenses.create') }}">＋ Add expense</a>
+        </div><div class="header-actions"><a class="primary-action" href="{{ route('expenses.print-preview', $filters) }}" target="_blank" rel="noopener">Print preview</a><a class="primary-action" href="{{ route('expenses.create') }}">＋ Add expense</a></div>
     </header>
     @if (session('status'))
         <div hidden data-swal-toast="success">{{ session('status') }}</div>
