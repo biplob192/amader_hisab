@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => auth()->check() ? to_route('dashboard') : to_route('login'));
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/expenses.pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses-pdf');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/database-backup', [SettingController::class, 'backup'])->name('settings.backup');
     Route::get('/categories', [ExpenseCategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [ExpenseCategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [ExpenseCategoryController::class, 'store'])->name('categories.store');

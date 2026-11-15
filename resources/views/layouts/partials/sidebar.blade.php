@@ -11,6 +11,7 @@
         <a class="nav-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}" href="{{ route('expenses.index') }}"><span aria-hidden="true">&#8597;</span> Expenses</a>
         <a class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}" href="{{ route('reports.index') }}"><span aria-hidden="true">&#8803;</span> Reports</a>
         <a class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}"><span aria-hidden="true">&#10064;</span> Categories</a>
+        <a class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}"><span aria-hidden="true">&#9881;</span> Settings</a>
     </nav>
     <div class="sidebar-bottom">
         <div class="profile-row">
