@@ -46,6 +46,15 @@ class ExpenseController extends Controller
         ]);
     }
 
+    public function show(Request $request, Expense $expense): View
+    {
+        abort_unless($expense->user_id === $request->user()->id, 404);
+
+        return view('expenses.show', [
+            'expense' => $expense->load('category'),
+        ]);
+    }
+
     public function edit(Request $request, Expense $expense): View
     {
         abort_unless($expense->user_id === $request->user()->id, 404);
@@ -136,7 +145,8 @@ class ExpenseController extends Controller
             'returned_amount' => ['required', 'numeric', 'gte:0', 'lte:amount', 'max:9999999999.99'],
             'paid_by' => ['required', Rule::in(self::PAYERS)],
             'spent_on' => ['required', 'date', 'before_or_equal:today'],
-            'notes' => ['nullable', 'string', 'max:2000'],
+            'notes' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
         ]);
     }
 

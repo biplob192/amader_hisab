@@ -12,7 +12,7 @@ class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'expense_category_id', 'amount', 'returned_amount', 'paid_by', 'spent_on', 'notes'];
+    protected $fillable = ['user_id', 'expense_category_id', 'amount', 'returned_amount', 'paid_by', 'spent_on', 'notes', 'description'];
 
     protected function casts(): array
     {

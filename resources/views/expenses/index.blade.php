@@ -71,7 +71,7 @@
                     <tbody>
                         @foreach ($expenses as $expense)
                             <tr>
-                                <td><strong>{{ $expense->notes ?: $expense->category->name }}</strong></td>
+                                <td><strong>@if (filled($expense->description))<a class="expense-description-link" href="{{ route('expenses.show', $expense) }}">{{ $expense->notes ?: $expense->category->name }}</a>@else{{ $expense->notes ?: $expense->category->name }}@endif</strong></td>
                                 <td><span class="category-label"><i style="--category-color:{{ $expense->category->color }}"></i>{{ $expense->category->name }}</span></td>
                                 <td><span class="payer-chip">{{ $expense->paid_by }}</span></td>
                                 <td>{{ $expense->spent_on->format('M j, Y') }}</td>
