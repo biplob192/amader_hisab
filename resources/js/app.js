@@ -17,6 +17,41 @@ document.querySelectorAll('[data-swal-toast]').forEach((message) => {
     });
 });
 
+document.querySelectorAll('form[data-loading-form]').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const button = form.querySelector('button[type="submit"]');
+        const label = button?.querySelector('.button-label');
+        const spinner = button?.querySelector('.button-spinner');
+
+        if (!button || !label || !spinner) return;
+
+        button.disabled = true;
+        label.textContent = button.dataset.loadingLabel || 'Loading...';
+        spinner.classList.add('is-visible');
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            });
+            const result = await response.json();
+
+            if (!response.ok) {
+                toast.fire({ icon: 'error', title: result.message || 'The request could not be completed.' });
+            }
+        } catch {
+            toast.fire({ icon: 'error', title: 'Windows Explorer could not be opened.' });
+        } finally {
+            button.disabled = false;
+            label.textContent = 'Open in Windows Explorer';
+            spinner.classList.remove('is-visible');
+        }
+    });
+});
+
 document.querySelectorAll('form[data-swal-confirm]').forEach((form) => {
     form.addEventListener('submit', async (event) => {
         if (form.dataset.confirmed === 'true') return;

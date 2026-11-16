@@ -15,6 +15,10 @@
             <button class="primary-action" type="submit">Save folder</button>
         </form>
         <p class="settings-help">Enter or paste the full folder path. The folder must already exist.</p>
+        <form method="POST" action="{{ route('settings.open-backup-folder') }}" class="settings-open-folder-form" data-loading-form>
+            @csrf
+            <button class="primary-action" type="submit" data-loading-label="Opening folder..." @disabled(! $backupDirectory || ! is_dir($backupDirectory) || PHP_OS_FAMILY !== 'Windows')><span class="button-spinner" aria-hidden="true"></span><span class="button-label">Open in Windows Explorer</span> <span aria-hidden="true">&#8599;</span></button>
+        </form>
     </section>
 
     <section class="settings-card">

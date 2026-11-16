@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/expenses.pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses-pdf');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/open-backup-folder', [SettingController::class, 'openBackupFolder'])->name('settings.open-backup-folder');
     Route::post('/settings/database-backup', [SettingController::class, 'backup'])->name('settings.backup');
     Route::get('/categories', [ExpenseCategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [ExpenseCategoryController::class, 'create'])->name('categories.create');

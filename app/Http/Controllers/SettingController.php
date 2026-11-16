@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,45 @@ class SettingController extends Controller
         );
 
         return to_route('settings.index')->with('status', 'Backup folder saved.');
+    }
+
+    public function openBackupFolder(): JsonResponse
+    {
+        if (PHP_OS_FAMILY !== 'Windows') {
+            return response()->json(['message' => 'Opening the backup folder in Explorer is available only on Windows.'], 422);
+        }
+
+        $directory = Setting::query()->where('key', self::BACKUP_DIRECTORY_KEY)->value('value');
+        $realDirectory = is_string($directory) ? realpath($directory) : false;
+
+        if ($realDirectory === false || ! is_dir($realDirectory)) {
+            return response()->json(['message' => 'Save an existing backup folder before opening it in Explorer.'], 422);
+        }
+
+        $windowsDirectory = getenv('WINDIR');
+        $explorer = is_string($windowsDirectory) && $windowsDirectory !== ''
+            ? $windowsDirectory.DIRECTORY_SEPARATOR.'explorer.exe'
+            : 'explorer.exe';
+
+        try {
+            $process = proc_open([$explorer, $realDirectory], [
+                0 => ['file', 'NUL', 'r'],
+                1 => ['file', 'NUL', 'w'],
+                2 => ['file', 'NUL', 'w'],
+            ], $pipes, null, null, ['bypass_shell' => true]);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json(['message' => 'Windows Explorer could not be opened.'], 500);
+        }
+
+        if (! is_resource($process)) {
+            return response()->json(['message' => 'Windows Explorer could not be opened.'], 500);
+        }
+
+        proc_close($process);
+
+        return response()->json(['message' => 'Backup folder opened in Windows Explorer.']);
     }
 
     public function backup(Request $request): RedirectResponse
