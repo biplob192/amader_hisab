@@ -8,7 +8,13 @@
         </header>
 
         <section class="stats-grid dashboard-summary">
-            <article class="stat-card"><div class="stat-top"><span>Total Expense</span><span class="stat-icon balance-icon"><svg class="metric-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span></div><div class="stat-value">&#2547; {{ number_format($totalExpense, 2) }}</div><div class="stat-foot"><span>All time, after returns</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Total Expense</span><span class="stat-icon balance-icon"><svg class="metric-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span></div><div class="stat-value">&#2547; {{ number_format($totalExpense, 2) }}</div><div class="stat-foot"><span>
+                @if ($firstExpenseMonth)
+                    All time, since <strong>{{ $firstExpenseMonth }}</strong>
+                @else
+                    No expenses yet
+                @endif
+            </span></div></article>
             <article class="stat-card"><div class="stat-top"><span>Today</span><span class="stat-icon income-icon"><svg class="metric-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 9h16M8 13h.01M12 13h.01M16 13h.01"/></svg></span></div><div class="stat-value">&#2547; {{ number_format($todayTotal, 2) }}</div><div class="stat-foot"><span>{{ now()->format('M j, Y') }}</span></div></article>
             <article class="stat-card"><div class="stat-top"><span>This Week</span><span class="stat-icon expense-icon"><svg class="metric-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 9h18M7 13h3m4 0h3M7 17h3m4 0h3"/></svg></span></div><div class="stat-value">&#2547; {{ number_format($weekTotal, 2) }}</div><div class="stat-foot"><span>{{ now()->startOfWeek()->format('M j') }} to {{ now()->endOfWeek()->format('M j') }}</span></div></article>
             <article class="stat-card"><div class="stat-top"><span>This Month</span><span class="stat-icon balance-icon"><svg class="metric-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/></svg></span></div><div class="stat-value">&#2547; {{ number_format($selectedMonthTotal, 2) }}</div><div class="stat-foot"><span>{{ $month->format('F Y') }}</span></div></article>

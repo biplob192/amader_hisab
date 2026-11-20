@@ -22,6 +22,10 @@ class DashboardController extends Controller
         $userId = (int) $request->user()->id;
         $expenses = Expense::query()->where('user_id', $request->user()->id)->whereBetween('spent_on', [$start, $end]);
         $householdExpenses = Expense::query()->where('user_id', $request->user()->id);
+        $firstExpenseCreatedAt = (clone $householdExpenses)->min('created_at');
+        $firstExpenseMonth = $firstExpenseCreatedAt
+            ? Carbon::parse($firstExpenseCreatedAt)->format('F Y')
+            : null;
         $today = now()->toDateString();
         $weekStart = now()->startOfWeek()->toDateString();
         $weekEnd = now()->endOfWeek()->toDateString();
@@ -46,6 +50,7 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'month' => $month,
+            'firstExpenseMonth' => $firstExpenseMonth,
             'dailyExpenseChart' => $dailyExpenseChart,
             'monthlyExpenseChart' => $monthlyExpenseChart,
             'total' => (clone $expenses)->sum(DB::raw('amount - returned_amount')),
